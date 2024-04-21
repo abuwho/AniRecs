@@ -9,6 +9,12 @@ readme = "README.md"
 python = "^3.12"
 fastapi = "^0.110.2"
 uvicorn = {extras = ["standard"], version = "^0.29.0"}
+pydantic = "^2.7.0"
+bcrypt = "^4.1.2"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+passlib = "^1.7.4"
+python-multipart = "^0.0.9"
+jwt = "^1.3.1"
 
 
 [build-system]
