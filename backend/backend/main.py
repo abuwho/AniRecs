@@ -8,9 +8,10 @@ from jose import jwt
 
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy import Column, String
+from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.future import select
+from sqlalchemy import JSON
 
 DATABASE_URL = "sqlite+aiosqlite:///./test.db"
 engine = create_async_engine(DATABASE_URL, echo=True)
@@ -25,10 +26,22 @@ class UserInDB(Base):
 class BlacklistedToken(Base):
     __tablename__ = "blacklisted_tokens"
     token = Column(String, primary_key=True, index=True)
+    
+class UserProfile(Base):
+    __tablename__ = "user_profiles"
+    user_id = Column(String, ForeignKey('users.username'), primary_key=True)
+    preferences = Column(JSON)  # This could include settings like language, layout, etc.
+    favorites = Column(JSON)
 
 async def init_db():
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+
+
+UserInDB.favorites = relationship("UserProfile", back_populates="user", uselist=False)
+
+# Ensure to include the back_populates in UserInDB if needed
+UserProfile.user = relationship("UserInDB", back_populates="favorites")
 
 app = FastAPI()
 
@@ -63,6 +76,18 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 class User(BaseModel):
     username: str
     password: str
+    
+
+class UserProfileRequestModel(BaseModel):
+    preferences : object
+    favorites : object
+    
+
+class UserProfileResponseModel(BaseModel):
+    user_id: str
+    preferences : object
+    favorites : object
+
 
 def hash_password(password: str):
     return pwd_context.hash(password)
@@ -173,6 +198,41 @@ async def read_users_me(token: str = Depends(oauth2_scheme)):
         return {"username": user.username}
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token or expired token")
+
+
+@app.post("/users/{username}/profile", response_model=UserProfileResponseModel, tags=["user-profile"])
+async def create_user_profile(username: str, profile_data: UserProfileRequestModel, token: str = Depends(oauth2_scheme)):
+    if await check_blacklist(token.credentials):
+        raise HTTPException(status_code=401, detail="Invalid token or expired token")
+    async with SessionLocal() as session:
+        user_profile = UserProfile(user_id=username, **profile_data.dict())
+        x = session.add(user_profile)
+        await session.commit()        
+        return user_profile
+
+@app.patch("/users/{username}/profile", response_model=UserProfileResponseModel, tags=["user-profile"])
+async def update_user_profile(username: str, profile_data: UserProfileRequestModel, token: str = Depends(oauth2_scheme)):
+    if await check_blacklist(token.credentials):
+        raise HTTPException(status_code=401, detail="Invalid token or expired token")
+    async with SessionLocal() as session:
+        existing_profile = await session.get(UserProfile, username)
+        if not existing_profile:
+            raise HTTPException(status_code=404, detail="Profile not found")
+        for var, value in profile_data.dict().items():
+            setattr(existing_profile, var, value) if value is not None else None
+        session.add(existing_profile)
+        await session.commit()
+        return existing_profile
+
+@app.get("/users/{username}/profile", response_model=UserProfileResponseModel, tags=["user-profile"])
+async def get_user_profile(username: str, token: str = Depends(oauth2_scheme)):
+    if await check_blacklist(token.credentials):
+        raise HTTPException(status_code=401, detail="Invalid token or expired token")
+    async with SessionLocal() as session:
+        user_profile = await session.get(UserProfile, username)
+        if not user_profile:
+            raise HTTPException(status_code=404, detail="Profile not found")
+        return user_profile
 
 
 
