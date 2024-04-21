@@ -15,6 +15,10 @@ python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 passlib = "^1.7.4"
 python-multipart = "^0.0.9"
 jwt = "^1.3.1"
+sqlalchemy = "^2.0.29"
+databases = "^0.9.0"
+aiosqlite = "^0.20.0"
+greenlet = "^3.0.3"
 
 
 [build-system]
