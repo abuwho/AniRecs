@@ -66,6 +66,8 @@ export default component$(() => {
   </div>
 </nav>
 
+
+
 {/* <script>
   const menuToggle = document.getElementById('menu-toggle');
   const mobileMenu = document.getElementById('mobile-menu');
