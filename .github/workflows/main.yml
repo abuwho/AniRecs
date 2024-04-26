@@ -1,0 +1,29 @@
+name: Anirecs Workflow
+
+on: push  
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      name: Check out repository code
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install Poetry
+      run: |
+        pip install poetry
+        poetry install
+
+    - name: Run flake8
+      run: |
+        poetry run flake8 .
+
+    - name: Run Bandit
+      run: |
+        poetry run bandit -r .

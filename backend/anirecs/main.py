@@ -1,9 +1,9 @@
 from fastapi import FastAPI
 from .database import engine
 from . import models
-from .config import settings
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import auth, genre, user,anime, favourite, preference, genreAnime
+from .routers import auth, genre, user, anime
+from .routers import favourite, preference, genreAnime
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -18,19 +18,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
- 
- 
-app.include_router(auth.router) 
-app.include_router(user.router) 
-app.include_router(genre.router) 
-app.include_router(anime.router) 
-app.include_router(favourite.router) 
-app.include_router(preference.router) 
-app.include_router(genreAnime.router) 
+
+app.include_router(auth.router)
+app.include_router(user.router)
+app.include_router(genre.router)
+app.include_router(anime.router)
+app.include_router(favourite.router)
+app.include_router(preference.router)
+app.include_router(genreAnime.router)
+
 
 @app.get("/")
 def root():
     return {"AniRecs": "Anime Recommendation App"}
+
 
 # poetry run uvicorn anirecs.main:app --reload
 # pip freeze --exclude-editable > requirements.txt
