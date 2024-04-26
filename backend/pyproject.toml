@@ -1,24 +1,20 @@
 [tool.poetry]
-name = "backend"
+name = "anirecs"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = ["ejedavid <ejeohejidavid@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.9"
 fastapi = "^0.110.2"
-uvicorn = {extras = ["standard"], version = "^0.29.0"}
-pydantic = "^2.7.0"
-bcrypt = "^4.1.2"
-python-jose = {extras = ["cryptography"], version = "^3.3.0"}
+pydantic = "^2.3.0"
+python-jose = "^3.3.0" 
+sqlalchemy = "^1.4.0"
+uvicorn = "^0.29.0"
+pydantic-settings = "^2.2.1"
+psycopg2-binary = "^2.9.9"
 passlib = "^1.7.4"
-python-multipart = "^0.0.9"
-jwt = "^1.3.1"
-sqlalchemy = "^2.0.29"
-databases = "^0.9.0"
-aiosqlite = "^0.20.0"
-greenlet = "^3.0.3"
 
 
 [build-system]
