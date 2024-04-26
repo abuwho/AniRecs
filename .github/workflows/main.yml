@@ -13,17 +13,24 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
+        python-version: '3.x'  
 
     - name: Install Poetry
       run: |
         pip install poetry
+      working-directory: ./backend
+
+    - name: Install dependencies
+      run: |
         poetry install
+      working-directory: ./backend  
 
     - name: Run flake8
       run: |
-        poetry run flake8 .
+        poetry run flake8
+      working-directory: ./backend  
 
     - name: Run Bandit
       run: |
         poetry run bandit -r .
+      working-directory: ./backend  
