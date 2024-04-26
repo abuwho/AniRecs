@@ -1,4 +1,5 @@
 import { component$ } from '@builder.io/qwik';
+import SearchBar from '~/components/search/search-bar';
 
 export default component$(() => {
     return (
@@ -11,6 +12,10 @@ export default component$(() => {
                   AniRecs
                 </span>
               </a>
+
+              {/* <div> */}
+                <SearchBar />
+              {/* </div> */}
 
               <div class="flex items-center">
                 <button
