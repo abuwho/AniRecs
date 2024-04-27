@@ -1,12 +1,9 @@
 from jose import JWTError, jwt
-from . import schemas, database, models
 from datetime import datetime, timedelta, timezone
-from fastapi import Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
 from .config import settings
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl='login')
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm
@@ -16,7 +13,9 @@ REFRESH_TOKEN_EXPIRE_DAYS = settings.refresh_token_expire_days
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(
+        minutes=ACCESS_TOKEN_EXPIRE_MINUTES
+    )
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
@@ -40,13 +39,3 @@ def verify_token(token: str, credentials_exception):
     except JWTError:
         raise credentials_exception
     return token_data
-
-
-
-
-
-
-
-
-
-

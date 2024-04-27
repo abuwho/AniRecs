@@ -1,8 +1,6 @@
 # Using a specific minor version of Python for better control over the Python environment
 FROM python:3.10-slim-bullseye 
 
-
-
 # Install system dependencies
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -10,6 +8,7 @@ RUN apt-get update \
        libpq-dev \
        curl \
     && apt-get clean \
+    && apt-get install -y postgresql-client \ 
     && rm -rf /var/lib/apt/lists/*
 
 
