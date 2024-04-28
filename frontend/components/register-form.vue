@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+const router = useRouter();
+
 const usernameInput = ref<HTMLInputElement | null>(null);
 const passwordInput = ref<HTMLInputElement | null>(null);
 
@@ -26,6 +28,7 @@ const handleRegistration = async (event: Event) => {
       throw new Error('Registration request failed')
     }
     
+    router.push({ path: "/auth/login" });
     console.log('Registration successful');
 
   } catch (error) {
