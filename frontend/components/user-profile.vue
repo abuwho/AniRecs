@@ -1,10 +1,25 @@
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth';
+import { useUserStore } from '~/stores/user';
+
+const userStore = useUserStore();
 const authStore = useAuthStore();
 const router = useRouter();
+const route = useRoute();
+
+const props = defineProps({
+    perspective: { type: String, default: "" }
+})
 
 onMounted(async () => {
-    await authStore.fetchCurrentUser();
+    if (props.perspective === 'self') {
+        await authStore.fetchCurrentUser();
+    }
+
+    if (props.perspective === "others") {
+        await userStore.fetchUser(+route.params.id);
+    }
+
 });
 
 const handleDeleteAccount = async () => {
@@ -24,20 +39,31 @@ const handleDeleteAccount = async () => {
 
     <div class="container">
 
-        <h1>Hello, 
-            {{  authStore.getCurrentUser.username }}! 
-            This is your profile. </h1>
+        <h1 v-if="props.perspective === 'self'">Hello, {{  authStore.getCurrentUser.username }}! This is your profile. </h1>
 
-        <div>Your user ID: 
+        <h1 v-else-if="props.perspective === 'others'">Welcome to {{  userStore.getUser.username }}'s profile! </h1>
+
+        <div v-if="props.perspective === 'self'">User ID: 
             {{ authStore.getCurrentUser.id }}
         </div>
+        <div v-if="props.perspective === 'others'">
+            User ID:
+            {{ userStore.getUser.id }}
+        </div>
 
-        <div>
+        <div v-if="props.perspective === 'self'">
             Profile created at: 
             {{ authStore.getCurrentUser.createdAt }}
         </div>
 
-        <button @click="handleDeleteAccount" type="button" class="btn btn-danger">
+        <div v-else="props.perspective === 'others'">
+            Profile created at: 
+            {{ userStore.getUser.createdAt }}
+        </div>
+
+        <button 
+            v-if="props.perspective === 'self'"
+            @click="handleDeleteAccount" type="button" class="btn btn-danger">
             Delete Account
         </button>
 

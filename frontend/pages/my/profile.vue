@@ -7,7 +7,7 @@
     <div>
         <nav-bar />
 
-        <user-profile />
+        <user-profile perspective="self" />
     </div>
 
 </template>
