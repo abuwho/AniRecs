@@ -23,7 +23,7 @@ const handleRegistration = async (event: Event) => {
     })
 
     if (!response.ok) {
-      throw new Error('Registration requestion failed')
+      throw new Error('Registration request failed')
     }
     
     console.log('Registration successful');
