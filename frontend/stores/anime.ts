@@ -28,6 +28,55 @@ export const useAnimeStore = defineStore('anime', {
             } catch (error) {
                 console.error("Error fetching animes", error);
             }
+        },
+
+        async deleteAnime(animeId: number) {
+            const url = `${useRuntimeConfig().public.apiBase}/animes/${animeId}`
+            const jwt = localStorage.getItem('anirecs:access_token');
+
+            try {
+                const respone = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwt}`
+                    }
+                });
+
+                if (!respone.ok) {
+                    throw new Error("Error deleting anime");
+                }
+
+            } catch (error) {
+                console.error("Error deleting anime", error);
+            }
+        }, 
+
+        async addAnimeToFavorites(animeId: number) {
+            const url = `${useRuntimeConfig().public.apiBase}/user/addfavourites`;
+            const jwt = localStorage.getItem('anirecs:access_token') as string;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwt}`
+                    },
+                    body: JSON.stringify({
+                        user_id: useAuthStore().getCurrentUser.id,
+                        anime_id: animeId
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Error adding anime to favorites");
+                }
+                
+            } catch (error) {
+                console.error('Error adding anime to favorites', error)
+            }
+            
         }
     },
 
