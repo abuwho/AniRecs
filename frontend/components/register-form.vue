@@ -34,7 +34,6 @@ const handleRegistration = async (event: Event) => {
   } catch (error) {
     console.error('Registration error', error);
   }
-    
 }
 
 </script>

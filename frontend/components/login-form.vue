@@ -1,5 +1,7 @@
 <script setup lang="ts">
 
+const router = useRouter();
+
 const usernameInput = ref<HTMLInputElement | null>(null);
 const passwordInput = ref<HTMLInputElement | null>(null);
 
@@ -24,6 +26,7 @@ const handleLogin = async (event: Event) => {
 
     localStorage.setItem('anirecs:access_token', data['access_token']);
 
+    router.push({ path: "/animes" });
     console.log('Login successful');
   } catch (error) {
     console.error('Login error', error);
