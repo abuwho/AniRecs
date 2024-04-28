@@ -1,4 +1,27 @@
 <script setup lang="ts">
+import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
+
+import { useAuthStore } from '~/stores/auth';
+const authStore = useAuthStore();
+
+const navigation = [
+{ name: 'Animes', href: '/animes', current: true },
+{ name: 'Genres', href: '/genres', current: false },
+{ name: 'Projects', href: '#', current: false },
+{ name: 'Calendar', href: '#', current: false },
+]
+
+onMounted(() => {
+    const access_token = localStorage.getItem('anirecs:access_token');
+
+    if (access_token) {
+        authStore.updateLoggedInStatus(true);
+    } else {
+        authStore.updateLoggedInStatus(false);
+    }
+
+})
 
 </script>
 
@@ -33,7 +56,7 @@
         </button>
 
         <!-- Profile dropdown -->
-        <Menu as="div" class="relative ml-3">
+        <Menu v-if="authStore.getIsLoggedIn" as="div" class="relative ml-3">
             <div>
             <MenuButton class="relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <span class="absolute -inset-1.5" />
@@ -44,13 +67,13 @@
             <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
             <MenuItems class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                 <MenuItem v-slot="{ active }">
-                <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Your Profile</a>
+                <nuxt-link to="/my/profile" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">My Profile</nuxt-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>
+                <nuxt-link href="/my/favorites" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Favorites</nuxt-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign out</a>
+                <nuxt-link to="/" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign out</nuxt-link>
                 </MenuItem>
             </MenuItems>
             </transition>
@@ -66,15 +89,3 @@
     </DisclosurePanel>
 </Disclosure>
 </template>
-
-<script setup>
-import { Disclosure, DisclosureButton, DisclosurePanel, Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
-import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
-
-const navigation = [
-{ name: 'Dashboard', href: '#', current: true },
-{ name: 'Team', href: '#', current: false },
-{ name: 'Projects', href: '#', current: false },
-{ name: 'Calendar', href: '#', current: false },
-]
-</script>

@@ -5,3 +5,9 @@ export interface Anime {
     id: number;
     createdAt: string;
 }
+
+export interface User {
+    id: number;
+    username: string;
+    createdAt: string;
+}
