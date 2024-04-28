@@ -32,6 +32,20 @@ const handleDeleteAccount = async () => {
 
 }
 
+
+const showForm = ref(false);
+const toggleShowForm = () => {
+    showForm.value = !showForm.value;
+}
+
+const usernameInput = ref<HTMLInputElement | null>(null);
+const handleUpdateUsername = async () => {
+
+    authStore.updateAccount(usernameInput.value?.value as string).then(() => {
+        window.location.reload();
+    });
+}
+
 </script>
 
 
@@ -59,6 +73,18 @@ const handleDeleteAccount = async () => {
         <div v-else="props.perspective === 'others'">
             Profile created at: 
             {{ userStore.getUser.createdAt }}
+        </div>
+
+        <button @click="toggleShowForm" v-if="props.perspective === 'self'" type="button" class="btn btn-primary">
+            Edit Profile
+        </button>
+
+        <div v-if="showForm">
+            <form action="">
+                <label for="username">New username: </label>
+                <input ref="usernameInput" id="username" type="text" placeholder="username" >
+                <button @click="handleUpdateUsername" type="button" class="btn btn-success">Update username</button>
+            </form>
         </div>
 
         <button 
