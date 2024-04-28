@@ -6,7 +6,8 @@ export const useAnimeStore = defineStore('anime', {
     state: () => {
         return {
             loading: true,
-            animes: [] as Anime[]
+            animes: [] as Anime[],
+            favoriteAnimes: [] as Anime[]
         }
     },
 
@@ -103,13 +104,33 @@ export const useAnimeStore = defineStore('anime', {
             } catch (error) {
                 console.error('Error adding anime to favorites', error)
             }
-            
+        },
+
+        async fetchFavoriteAnimes(userId: number) {
+            const url = `${useRuntimeConfig().public.apiBase}/user/favourites/${userId}`
+            const jwt = localStorage.getItem('anirecs:access_token') as string;
+
+            try {
+                this.favoriteAnimes = await $fetch<Anime[]>(url, {
+                    headers: {
+                        'Authorization': `Bearer ${jwt}`
+                    }
+                });
+
+            } catch (error) {
+                console.error("Error getting favorite animes", error)
+            }
+
         }
     },
 
     getters: {
         getAnimes: (state) => {
             return state.animes;
+        },
+
+        getFavoriteAnimes: (state) => {
+            return state.favoriteAnimes;
         }
     }
 
