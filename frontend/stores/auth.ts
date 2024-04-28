@@ -56,7 +56,35 @@ export const useAuthStore = defineStore('auth', {
             } catch (error) {
                 console.log("Error logging out: ", error);
             }
-        }
+        }, 
+
+        async deleteAccount() {
+            const url = `${useRuntimeConfig().public.apiBase}/users/me`;
+            const jwt = localStorage.getItem('anirecs:access_token') as string;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwt}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error("Could not delete account");
+                }
+
+                // Remove item in localStorage
+                localStorage.removeItem('anirecs:access_token');
+                this.isLoggedIn = false;
+                console.log('Account deleted successfully');
+
+            } catch (error) {
+                console.log("Error deleting account: ", error);
+            }
+
+        }, 
     },
 
     getters: {

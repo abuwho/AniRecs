@@ -5,7 +5,8 @@
 <template>
 
     <div>
-
+        <nav-bar />
+        
         <anime-feed />
 
     </div>

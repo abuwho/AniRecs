@@ -1,10 +1,21 @@
 <script setup lang="ts">
 import { useAuthStore } from '~/stores/auth';
 const authStore = useAuthStore();
+const router = useRouter();
 
 onMounted(async () => {
     await authStore.fetchCurrentUser();
 });
+
+const handleDeleteAccount = async () => {
+
+    await authStore.deleteAccount();
+
+    router.push({ path: "/" });
+
+    authStore.$reset();
+
+}
 
 </script>
 
@@ -26,6 +37,10 @@ onMounted(async () => {
             {{ authStore.getCurrentUser.createdAt }}
         </div>
 
+        <button @click="handleDeleteAccount" type="button" class="btn btn-danger">
+            Delete Account
+        </button>
+
     </div>
 
 </template>
@@ -39,5 +54,6 @@ onMounted(async () => {
   margin-right: auto;
   margin-top: 30vh;
 }
+
 
 </style>
