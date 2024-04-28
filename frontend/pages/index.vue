@@ -5,5 +5,7 @@
 <template>
     <div>
         <nav-bar />
+
+        <home-welcome />
     </div>
 </template>
