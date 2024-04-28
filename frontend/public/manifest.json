@@ -1,9 +1,0 @@
-{
-  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "AniRecs",
-  "short_name": "Welcome to AniRecs",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#fff",
-  "description": "A Qwik project app that recommends animations"
-}

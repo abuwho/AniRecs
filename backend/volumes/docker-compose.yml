@@ -1,0 +1,27 @@
+version: '3.9'
+services:
+  anirecs:
+    container_name: anirecs_container
+    build:
+      context: ../
+    restart: always
+    env_file:
+      - ../.env
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./docker-volumes/anirecs:/anirecs
+    depends_on:
+      - postgres
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=anirecs
+      - POSTGRES_PASSWORD=anirecs
+      - POSTGRES_DB=anirecs
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./docker-volumes/postgres:/var/lib/postgresql
