@@ -30,6 +30,33 @@ export const useAnimeStore = defineStore('anime', {
             }
         },
 
+        async createAnime(title: string, description: string, rating: number) {
+            const url = `${useRuntimeConfig().public.apiBase}/animes`
+            const jwt = localStorage.getItem('anirecs:access_token');
+
+            try {
+                const respone = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${jwt}`
+                    },
+                    body: JSON.stringify({
+                        title,
+                        description, 
+                        rating
+                    })
+                });
+
+                if (!respone.ok) {
+                    throw new Error("Error creating anime");
+                }
+
+            } catch (error) {
+                console.error("Error creating anime", error);
+            }
+        }, 
+
         async deleteAnime(animeId: number) {
             const url = `${useRuntimeConfig().public.apiBase}/animes/${animeId}`
             const jwt = localStorage.getItem('anirecs:access_token');
@@ -72,7 +99,7 @@ export const useAnimeStore = defineStore('anime', {
                 if (!response.ok) {
                     throw new Error("Error adding anime to favorites");
                 }
-                
+
             } catch (error) {
                 console.error('Error adding anime to favorites', error)
             }
