@@ -31,7 +31,6 @@ const handleLogin = async (event: Event) => {
   } catch (error) {
     console.error('Login error', error);
   }
-    
 }
 
 </script>

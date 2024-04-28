@@ -4,6 +4,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 
 import { useAuthStore } from '~/stores/auth';
 const authStore = useAuthStore();
+const router = useRouter();
 
 const navigation = [
 { name: 'Animes', href: '/animes', current: true },
@@ -11,6 +12,13 @@ const navigation = [
 { name: 'Projects', href: '#', current: false },
 { name: 'Calendar', href: '#', current: false },
 ]
+
+const handleLogout = async () => {
+    // Logout in store
+    await authStore.logout();
+
+    router.push({ path: "/" })
+}
 
 onMounted(() => {
     const access_token = localStorage.getItem('anirecs:access_token');
@@ -73,7 +81,7 @@ onMounted(() => {
                 <nuxt-link href="/my/favorites" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Favorites</nuxt-link>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                <nuxt-link to="/" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign out</nuxt-link>
+                <button @click="handleLogout" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Sign out</button>
                 </MenuItem>
             </MenuItems>
             </transition>
