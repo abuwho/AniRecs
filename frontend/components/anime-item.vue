@@ -36,7 +36,7 @@ const handleAddAnimeToFavorites = () => {
             <h5 class="card-title">{{ props.title }}</h5>
             <p class="card-text">{{ props.description }}</p>
             <p class="card-text">
-                Rating: {{ props.rating }} ⭐
+                Rating: {{ props.rating }}⭐
             </p>
 
             <p class="card-text">
