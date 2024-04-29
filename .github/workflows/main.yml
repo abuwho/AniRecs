@@ -14,6 +14,28 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'  
+        
+    - name: Load environment variables from secrets
+      env:
+        DATABASE_HOSTNAME: ${{ secrets.DATABASE_HOSTNAME }}
+        DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
+        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
+        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+        SECRET_KEY: ${{ secrets.SECRET_KEY }}
+        ALGORITHM: ${{ secrets.ALGORITHM }}
+        ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
+        REFRESH_TOKEN_EXPIRE_DAYS: ${{ secrets.REFRESH_TOKEN_EXPIRE_DAYS }}
+      run: |
+        echo "DATABASE_HOSTNAME=${DATABASE_HOSTNAME}" > backend/.env
+        echo "DATABASE_PORT=${DATABASE_PORT}" >> backend/.env
+        echo "DATABASE_PASSWORD=${DATABASE_PASSWORD}" >> backend/.env
+        echo "DATABASE_NAME=${DATABASE_NAME}" >> backend/.env
+        echo "DATABASE_USERNAME=${DATABASE_USERNAME}" >> backend/.env
+        echo "SECRET_KEY=${SECRET_KEY}" >> backend/.env
+        echo "ALGORITHM=${ALGORITHM}" >> backend/.env
+        echo "ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}" >> backend/.env
+        echo "REFRESH_TOKEN_EXPIRE_DAYS=${REFRESH_TOKEN_EXPIRE_DAYS}" >> backend/.env
 
     - name: Install Poetry
       run: |
