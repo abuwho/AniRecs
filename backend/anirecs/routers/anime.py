@@ -2,6 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from .. import schemas, database, models
 from .user import current_user
+from sqlalchemy.exc import IntegrityError
+
 
 router = APIRouter(tags=["animes"])
 
@@ -13,18 +15,54 @@ router = APIRouter(tags=["animes"])
 )
 async def create_anime(
     anime: schemas.AnimeCreate,
+    genres: list[str],  # Accept genre names as a list of strings
     current_user: schemas.UserOut = Depends(current_user),
     db: Session = Depends(database.get_db),
 ):
-    db_anime = models.Anime(
-        title=anime.title,
-        description=anime.description,
-        rating=anime.rating,
-    )
-    db.add(db_anime)
-    db.commit()
-    db.refresh(db_anime)
-    return db_anime
+    try:
+        db_anime = models.Anime(
+            title=anime.title,
+            description=anime.description,
+            rating=anime.rating,
+        )
+        db.add(db_anime)
+        db.commit()
+        db.refresh(db_anime)
+
+        # Associate genres with the created anime
+        for genre_name in genres:
+            db_genre = (
+                db.query(models.Genre)
+                .filter(models.Genre.name == genre_name)
+                .first()
+            )
+            if not db_genre:
+                raise HTTPException(
+                    status_code=status.HTTP_404_NOT_FOUND,
+                    detail=f"Genre '{genre_name}' not found",
+                )
+
+            # Create GenreAnime entry
+            db_genre_anime = models.GenreAnime(
+                genre_id=db_genre.id,
+                anime_id=db_anime.id,
+            )
+            db.add(db_genre_anime)
+            db.commit()
+
+        return db_anime
+    except IntegrityError as e:
+        error_detail = (
+            "Entry with the same anime id and genre id "
+            "already exists"
+        )
+        if "duplicate key value violates unique constraint" in str(e):
+            raise HTTPException(
+                status_code=status.HTTP_409_CONFLICT,
+                detail=error_detail,
+            )
+        else:
+            raise
 
 
 @router.get("/animes", response_model=list[schemas.Anime])
