@@ -14,7 +14,7 @@ The backend can be run using docker-compose. And the frontend is deployed on [Ve
     cd AniRecs
     ```
 
-- Run backend container (make sure you have Docker daemon running on your machine):
+- Run `backend` container (make sure you have Docker daemon running on your machine):
     ```shell
     # Change directory
     cd backend/volumes
@@ -27,7 +27,13 @@ The backend can be run using docker-compose. And the frontend is deployed on [Ve
         1. Vercel function
             - Just visit https://anirecs.vercel.app
         2. Using Docker
-            - TBA
+            ```
+            # Pull from Docker Hub
+            docker pull abuwho/anirecs-frontend:latest
+            # Run container
+            docker run -p 3000:3000 abuwho/anirecs-frontend
+            # Go to http://localhost:3000
+            ```
 
 ## Contributors
 
