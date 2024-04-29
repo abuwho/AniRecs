@@ -31,14 +31,17 @@ async def create_genre_anime(
         )
         if not db_genre:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Genre not found"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Genre not found",
             )
         if not db_anime:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Anime not found"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Anime not found",
             )
         db_genre_anime = models.GenreAnime(
-            genre_id=genre_anime.genre_id, anime_id=genre_anime.anime_id
+            genre_id=genre_anime.genre_id,
+            anime_id=genre_anime.anime_id,
         )
         db.add(db_genre_anime)
         db.commit()
@@ -52,7 +55,7 @@ async def create_genre_anime(
         if "duplicate key value violates unique constraint" in str(e):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=error_detail
+                detail=error_detail,
             )
         else:
             raise

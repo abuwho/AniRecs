@@ -27,11 +27,13 @@ async def favourite_anime(
         )
         if not db_user:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found",
             )
         if not db_anime:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Anime not found"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Anime not found",
             )
         db_favourite = models.Favourite(
             user_id=favourite.user_id, anime_id=favourite.anime_id
@@ -75,7 +77,8 @@ async def unfavourite_anime(
     )
     if not db_favourite:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Favourite not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Favourite not found",
         )
 
     db.delete(db_favourite)
@@ -89,10 +92,15 @@ async def get_user_favourited_anime(
     current_user: schemas.UserOut = Depends(current_user),
     db: Session = Depends(database.get_db),
 ):
-    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    db_user = (
+        db.query(models.User)
+        .filter(models.User.id == user_id)
+        .first()
+    )
     if not db_user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
         )
     favourites = (
         db.query(models.Anime)

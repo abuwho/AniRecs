@@ -2,19 +2,23 @@ from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from .config import settings
+import os
 
-SQLALCHEMY_DATABASE_URL = (
+TESTING = os.getenv("TESTING", "false").lower() in ["true", "1"]
+
+DATABASE_URL = (
     f"postgresql://{settings.database_username}:"
-    f"{settings.database_password}@"
-    f"{settings.database_hostname}:"
-    f"{settings.database_port}/"
-    f"{settings.database_name}"
+    f"{settings.database_password}@{settings.database_hostname}:"
+    f"{settings.database_port}/{settings.database_name}"
 )
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+if TESTING:
+    DATABASE_URL = os.getenv("TEST_DATABASE_URL", DATABASE_URL)
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
+engine = create_engine(DATABASE_URL)
+SessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine
+)
 Base = declarative_base()
 
 

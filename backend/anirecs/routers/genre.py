@@ -17,7 +17,9 @@ async def create_genre(
     db: Session = Depends(database.get_db),
 ):
     existing_genre = (
-        db.query(models.Genre).filter(models.Genre.name == genre.name).first()
+        db.query(models.Genre)
+        .filter(models.Genre.name == genre.name)
+        .first()
     )
     if existing_genre:
         raise HTTPException(
@@ -55,11 +57,14 @@ async def get_genre(
     db: Session = Depends(database.get_db),
 ):
     db_genre = (
-        db.query(models.Genre).filter(models.Genre.id == genre_id).first()
+        db.query(models.Genre)
+        .filter(models.Genre.id == genre_id)
+        .first()
     )
     if not db_genre:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Genre not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Genre not found",
         )
     return db_genre
 
@@ -72,11 +77,14 @@ async def update_genre(
     db: Session = Depends(database.get_db),
 ):
     db_genre = (
-        db.query(models.Genre).filter(models.Genre.id == genre_id).first()
+        db.query(models.Genre)
+        .filter(models.Genre.id == genre_id)
+        .first()
     )
     if not db_genre:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Genre not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Genre not found",
         )
     db_genre.name = genre.name
     db.commit()
@@ -84,18 +92,23 @@ async def update_genre(
     return db_genre
 
 
-@router.delete("/genres/{genre_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/genres/{genre_id}", status_code=status.HTTP_204_NO_CONTENT
+)
 async def delete_genre(
     genre_id: int,
     current_user: schemas.UserOut = Depends(current_user),
     db: Session = Depends(database.get_db),
 ):
     db_genre = (
-        db.query(models.Genre).filter(models.Genre.id == genre_id).first()
+        db.query(models.Genre)
+        .filter(models.Genre.id == genre_id)
+        .first()
     )
     if not db_genre:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Genre not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Genre not found",
         )
     db.delete(db_genre)
     db.commit()

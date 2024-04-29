@@ -17,7 +17,9 @@ async def create_anime(
     db: Session = Depends(database.get_db),
 ):
     db_anime = models.Anime(
-        title=anime.title, description=anime.description, rating=anime.rating
+        title=anime.title,
+        description=anime.description,
+        rating=anime.rating,
     )
     db.add(db_anime)
     db.commit()
@@ -49,11 +51,14 @@ async def get_anime(
     db: Session = Depends(database.get_db),
 ):
     db_anime = (
-        db.query(models.Anime).filter(models.Anime.id == anime_id).first()
+        db.query(models.Anime)
+        .filter(models.Anime.id == anime_id)
+        .first()
     )
     if not db_anime:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Anime not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Anime not found",
         )
     return db_anime
 
@@ -66,11 +71,14 @@ async def update_anime(
     db: Session = Depends(database.get_db),
 ):
     db_anime = (
-        db.query(models.Anime).filter(models.Anime.id == anime_id).first()
+        db.query(models.Anime)
+        .filter(models.Anime.id == anime_id)
+        .first()
     )
     if not db_anime:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Anime not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Anime not found",
         )
     db_anime.title = anime.title
     db_anime.description = anime.description
@@ -80,18 +88,23 @@ async def update_anime(
     return db_anime
 
 
-@router.delete("/animes/{anime_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete(
+    "/animes/{anime_id}", status_code=status.HTTP_204_NO_CONTENT
+)
 async def delete_anime(
     anime_id: int,
     current_user: schemas.UserOut = Depends(current_user),
     db: Session = Depends(database.get_db),
 ):
     db_anime = (
-        db.query(models.Anime).filter(models.Anime.id == anime_id).first()
+        db.query(models.Anime)
+        .filter(models.Anime.id == anime_id)
+        .first()
     )
     if not db_anime:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="Anime not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Anime not found",
         )
     db.delete(db_anime)
     db.commit()

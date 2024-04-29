@@ -8,23 +8,33 @@ router = APIRouter(tags=["users"])
 oauth2_scheme = HTTPBearer()
 
 
-@router.get("/users/me", tags=["users"], response_model=schemas.UserOut)
+@router.get(
+    "/users/me", tags=["users"], response_model=schemas.UserOut
+)
 async def current_user(
-    token: str = Depends(oauth2_scheme), db: Session = Depends(database.get_db)
+    token: str = Depends(oauth2_scheme),
+    db: Session = Depends(database.get_db),
 ):
     token = token.credentials
     try:
         payload = oauth2.verify_token(
             token,
             credentials_exception=HTTPException(
-                status_code=401, detail="Invalid token or expired token"
+                status_code=401,
+                detail="Invalid token or expired token",
             ),
         )
         userId = payload.get("user_id")
-        user = db.query(models.User).filter(models.User.id == userId).first()
+        user = (
+            db.query(models.User)
+            .filter(models.User.id == userId)
+            .first()
+        )
 
         if not user:
-            raise HTTPException(status_code=404, detail="User not found")
+            raise HTTPException(
+                status_code=404, detail="User not found"
+            )
         return user
     except JWTError:
         raise HTTPException(
@@ -55,7 +65,11 @@ async def get_user_by_id(
     current_user: schemas.UserOut = Depends(current_user),
     db: Session = Depends(database.get_db),
 ):
-    user = db.query(models.User).filter(models.User.id == user_id).first()
+    user = (
+        db.query(models.User)
+        .filter(models.User.id == user_id)
+        .first()
+    )
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
@@ -73,7 +87,11 @@ async def update_user(
             status_code=403,
             detail="You do not have permission to update this user",
         )
-    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    db_user = (
+        db.query(models.User)
+        .filter(models.User.id == user_id)
+        .first()
+    )
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
     db_user.username = user.username
@@ -88,7 +106,9 @@ async def delete_user(
     db: Session = Depends(database.get_db),
 ):
     db_user = (
-        db.query(models.User).filter(models.User.id == current_user.id).first()
+        db.query(models.User)
+        .filter(models.User.id == current_user.id)
+        .first()
     )
     if not db_user:
         raise HTTPException(status_code=404, detail="User not found")

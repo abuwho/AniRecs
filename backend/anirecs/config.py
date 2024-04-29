@@ -1,4 +1,8 @@
 from pydantic_settings import BaseSettings
+from dotenv import load_dotenv
+import os
+
+load_dotenv(os.path.join(os.path.dirname(__file__), "../.env"))
 
 
 class Settings(BaseSettings):
@@ -13,7 +17,7 @@ class Settings(BaseSettings):
     refresh_token_expire_days: int
 
     class Config:
-        env_file = ".env"
+        env_file = "../.env"
 
 
 settings = Settings()
