@@ -18,7 +18,8 @@ async def get_recommendations(
         .all()
     )
     preferred_genre_ids = [
-        preference.genre_id for preference in user_preferences]
+        preference.genre_id for preference in user_preferences
+    ]
 
     # Get anime ids for the preferred genres
     anime_ids_for_genres = (
@@ -26,7 +27,9 @@ async def get_recommendations(
         .filter(models.GenreAnime.genre_id.in_(preferred_genre_ids))
         .all()
     )
-    anime_ids_for_genres = [anime_id[0] for anime_id in anime_ids_for_genres]
+    anime_ids_for_genres = [
+        anime_id[0] for anime_id in anime_ids_for_genres
+    ]
 
     # Get recommended animes based on genre preferences and ratings
     recommendations = (

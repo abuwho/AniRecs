@@ -3,7 +3,12 @@ from .database import engine
 from . import models
 from fastapi.middleware.cors import CORSMiddleware
 from .routers import auth, genre, user, anime
-from .routers import favourite, preference, genreAnime, recommendations
+from .routers import (
+    favourite,
+    preference,
+    genreAnime,
+    recommendations,
+)
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -25,8 +30,8 @@ app.include_router(genre.router)
 app.include_router(anime.router)
 app.include_router(favourite.router)
 app.include_router(preference.router)
-app.include_router(recommendations.router)
 app.include_router(genreAnime.router)
+app.include_router(recommendations.router)
 
 
 @app.get("/")

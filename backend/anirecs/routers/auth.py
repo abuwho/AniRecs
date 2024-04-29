@@ -11,7 +11,9 @@ oauth2_scheme = HTTPBearer()
 
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
-async def register(user: schemas.UserLogin, db: Session = Depends(get_db)):
+async def register(
+    user: schemas.UserLogin, db: Session = Depends(get_db)
+):
     existing_user = (
         db.query(models.User)
         .filter(models.User.username == user.username)
@@ -23,7 +25,9 @@ async def register(user: schemas.UserLogin, db: Session = Depends(get_db)):
             detail="Username already exists",
         )
     hashed_password = utils.hash(user.password)
-    new_user = models.User(username=user.username, password=hashed_password)
+    new_user = models.User(
+        username=user.username, password=hashed_password
+    )
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -40,13 +44,19 @@ async def login(
         .filter(models.User.username == user_credentials.username)
         .first()
     )
-    if not user or not utils.verify(user_credentials.password, user.password):
+    if not user or not utils.verify(
+        user_credentials.password, user.password
+    ):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid Credentials",
         )
-    access_token = oauth2.create_access_token(data={"user_id": user.id})
-    refresh_token = oauth2.create_refresh_token(data={"user_id": user.id})
+    access_token = oauth2.create_access_token(
+        data={"user_id": user.id}
+    )
+    refresh_token = oauth2.create_refresh_token(
+        data={"user_id": user.id}
+    )
     return {
         "access_token": access_token,
         "token_type": "bearer",
@@ -62,17 +72,27 @@ async def refresh_token(
         payload = oauth2.verify_token(
             refresh_token,
             credentials_exception=HTTPException(
-                status_code=401, detail="Invalid token or expired token"
+                status_code=401,
+                detail="Invalid token or expired token",
             ),
         )
         user_id = payload.get("user_id")
-        user = db.query(models.User).filter(models.User.id == user_id).first()
+        user = (
+            db.query(models.User)
+            .filter(models.User.id == user_id)
+            .first()
+        )
         if not user:
-            raise HTTPException(status_code=404, detail="User not found")
+            raise HTTPException(
+                status_code=404, detail="User not found"
+            )
         new_access_token = oauth2.create_access_token(
             data={"user_id": user_id}
         )
-        return {"access_token": new_access_token, "token_type": "bearer"}
+        return {
+            "access_token": new_access_token,
+            "token_type": "bearer",
+        }
     except JWTError:
         raise HTTPException(
             status_code=401, detail="Invalid token or expired token"
@@ -85,7 +105,8 @@ async def logout(token: str = Depends(oauth2_scheme)):
         check = oauth2.verify_token(
             token.credentials,
             credentials_exception=HTTPException(
-                status_code=401, detail="Invalid token or expired token"
+                status_code=401,
+                detail="Invalid token or expired token",
             ),
         )
         print(f"Checks:{check}")

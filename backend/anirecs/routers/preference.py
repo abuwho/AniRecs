@@ -8,7 +8,9 @@ from typing import List
 router = APIRouter(tags=["preferences"])
 
 
-@router.post("/user/addpreferences", response_model=schemas.Preference)
+@router.post(
+    "/user/addpreferences", response_model=schemas.Preference
+)
 async def add_preference(
     preference: schemas.PreferenceCreate,
     current_user: schemas.UserOut = Depends(current_user),
@@ -27,11 +29,13 @@ async def add_preference(
         )
         if not db_user:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found",
             )
         if not db_genre:
             raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND, detail="Genre not found"
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Genre not found",
             )
         db_preference = models.Preference(
             user_id=preference.user_id, genre_id=preference.genre_id
@@ -48,7 +52,7 @@ async def add_preference(
             )
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=error_message
+                detail=error_message,
             )
         else:
             raise
@@ -89,16 +93,23 @@ async def remove_preference(
     return None
 
 
-@router.get("/preferences/{user_id}", response_model=List[schemas.Genre])
+@router.get(
+    "/preferences/{user_id}", response_model=List[schemas.Genre]
+)
 async def get_user_preferences(
     user_id: int,
     current_user: schemas.UserOut = Depends(current_user),
     db: Session = Depends(database.get_db),
 ):
-    db_user = db.query(models.User).filter(models.User.id == user_id).first()
+    db_user = (
+        db.query(models.User)
+        .filter(models.User.id == user_id)
+        .first()
+    )
     if not db_user:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
         )
     preferences = (
         db.query(models.Genre)

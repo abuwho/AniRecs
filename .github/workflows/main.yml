@@ -34,3 +34,17 @@ jobs:
       run: |
         poetry run bandit -r .
       working-directory: ./backend  
+
+    - name: Set up PostgreSQL Docker container
+      run: |
+        docker run --name test-postgres -e POSTGRES_DB=testdb -e POSTGRES_USER=user -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
+
+    - name: Set environment variables
+      run: |
+        export TESTING=true
+        export TEST_DATABASE_URL="postgresql://user:password@localhost:5432/testdb"
+
+    - name: Run pytest
+      run: |
+        poetry run pytest --cov=anirecs --cov-branch --cov-report=term --cov-fail-under=60 
+      working-directory: ./backend
