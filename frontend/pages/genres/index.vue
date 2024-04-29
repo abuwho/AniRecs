@@ -1,7 +1,5 @@
 <script setup lang="ts">
 
-
-
 </script>
 
 <template>
@@ -11,9 +9,13 @@
         <nav-bar />
 
         <div class="container">
-            <nuxt-link to="/animes/create" type="button" class="btn btn-primary my-3 mx-auto">Add a new Anime</nuxt-link>
-            <anime-feed />
+            <nuxt-link to="/genres/create" type="button" class="btn btn-primary">Add a new genre</nuxt-link>
+
+            <genre-feed />
+
         </div>
+        
+
     </div>
 
 </template>

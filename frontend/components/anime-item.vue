@@ -33,18 +33,18 @@ const handleAddAnimeToFavorites = () => {
         <img src="/naruto.jpg" class="card-img-top" alt="Naruto">
         <div class="card-body">
 
-            <h5 class="card-title">{{ props.title }}</h5>
+            <h5 class="card-title"><strong> {{ props.title }} </strong></h5>
             <p class="card-text">{{ props.description }}</p>
             <p class="card-text">
-                Rating: {{ props.rating }}
+                <strong>Rating:</strong> {{ props.rating }}⭐
             </p>
 
             <p class="card-text">
-                ID: {{ props.id }}
+                <strong>ID:</strong> {{ props.id }}
             </p>
 
-            <button @click="handleAddAnimeToFavorites" type="button" class="btn btn-info">Add to favorites</button>
-            <button @click="handleDeleteAnime" class="btn btn-danger">Delete</button>
+            <button @click="handleAddAnimeToFavorites" type="button" class="btn btn-info mx-2 my-2">Add to favorites</button>
+            <button @click="handleDeleteAnime" class="btn btn-danger mx-2 my-2">Delete</button>
         </div>
     </div>
 

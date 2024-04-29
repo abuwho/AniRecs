@@ -5,12 +5,12 @@ import { Bars3Icon, BellIcon, XMarkIcon } from '@heroicons/vue/24/outline'
 import { useAuthStore } from '~/stores/auth';
 const authStore = useAuthStore();
 const router = useRouter();
+const route = useRoute();
 
 const navigation = [
-{ name: 'Animes', href: '/animes', current: true },
-{ name: 'Genres', href: '/genres', current: false },
-{ name: 'Projects', href: '#', current: false },
-{ name: 'Calendar', href: '#', current: false },
+    { name: 'Animes', href: '/animes', current: route.fullPath.includes('animes') ? true : false },
+    { name: 'Genres', href: '/genres', current: route.fullPath.includes('genres') ? true : false },
+    { name: 'Recommendations', href: '/recommendations', current: route.fullPath.includes('recommendations') ? true : false }
 ]
 
 const handleLogout = async () => {
