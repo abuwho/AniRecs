@@ -42,8 +42,8 @@ jobs:
 
     - name: Set environment variables
       run: |
-        export TESTING=true
-        export TEST_DATABASE_URL="postgresql://user:password@localhost:5432/testdb"
+        echo "TESTING=true" >> $GITHUB_ENV
+        echo "TEST_DATABASE_URL=postgresql://user:password@test-postgres:5432/testdb" >> $GITHUB_ENV
       working-directory: ./backend
 
     - name: Run pytest
