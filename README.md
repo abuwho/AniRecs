@@ -1,3 +1,6 @@
+![Anirecs Main](https://github.com/abuwho/AniRecs/actions/workflows/main.yml/badge.svg)
+![Frontend CI](https://github.com/abuwho/AniRecs/actions/workflows/frontend-ci.yaml/badge.svg)
+
 # AniRecs: Anime Recommender Based on Preference
 
 ## Description
