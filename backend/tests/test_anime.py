@@ -55,23 +55,46 @@ def auth_header(test_db):
 
 
 def test_create_anime(auth_header):
+    client.post("/genres", json={"name": "Action"}, headers=auth_header)
+    client.post("/genres", json={"name": "Comedy"}, headers=auth_header)
+
     response = client.post(
         "/animes",
         json={
-            "title": "My Hero Academia",
-            "description": "A superhero story",
-            "rating": 8,
+            "anime": {
+                "title": "My Hero Academia",
+                "description": "A superhero story",
+                "rating": 8,
+            },
+            "genres": ["Action", "Comedy"],
         },
         headers=auth_header,
     )
+
     assert response.status_code == HTTP_201_CREATED  # nosec
     assert response.json()["title"] == "My Hero Academia"  # nosec
+
+    anime_id = response.json()["id"]
+    response = client.get(
+        f"/genre-anime/anime/{anime_id}", headers=auth_header
+    )
+    assert response.status_code == HTTP_200_OK  # nosec
+    genre_names = [genre["name"] for genre in response.json()]
+    assert "Action" in genre_names  # nosec
+    assert "Comedy" in genre_names  # nosec
 
 
 def test_get_anime(auth_header):
     create_resp = client.post(
         "/animes",
-        json={"title": "Naruto", "description": "Ninja world", "rating": 9},
+        json={
+            "anime": {
+                "title": "Naruto",
+                "description": "Ninja world",
+                "rating": 9,
+            },
+            "genres": [],
+        },
         headers=auth_header,
     )
     anime_id = create_resp.json()["id"]
@@ -84,9 +107,12 @@ def test_update_anime(auth_header):
     create_resp = client.post(
         "/animes",
         json={
-            "title": "One Piece",
-            "description": "Pirate adventure",
-            "rating": 9,
+            "anime": {
+                "title": "One Piece",
+                "description": "Pirate adventure",
+                "rating": 9,
+            },
+            "genres": [],
         },
         headers=auth_header,
     )
@@ -108,9 +134,12 @@ def test_delete_anime(auth_header):
     create_resp = client.post(
         "/animes",
         json={
-            "title": "Attack on Titan",
-            "description": "Titans vs Humans",
-            "rating": 10,
+            "anime": {
+                "title": "Attack on Titan",
+                "description": "Titans vs Humans",
+                "rating": 10,
+            },
+            "genres": [],
         },
         headers=auth_header,
     )
