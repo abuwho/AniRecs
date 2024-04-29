@@ -19,7 +19,7 @@ const handleCreateGenre = () => {
 
     <div class="container">
 
-        <h1>Add new Genre</h1>
+        <h1 class="h1">Add new Genre</h1>
 
         <form action="">
 

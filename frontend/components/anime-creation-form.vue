@@ -20,7 +20,7 @@ const handleCreateAnime = () => {
 <template>
 
     <div class="container">
-        <h1>Add new Anime.</h1>
+        <h1 class="h1">Add new Anime.</h1>
 
             <form action="">
 

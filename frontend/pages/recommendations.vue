@@ -16,8 +16,7 @@ onMounted(async () => {
         <nav-bar />
         <div class="container">
 
-
-            <h1>Recommended animes for @ {{ authStore.getCurrentUser.username }}</h1>
+            <h1 class="h1">Recommended animes for @{{ authStore.getCurrentUser.username }}</h1>
 
             <anime-feed />
 

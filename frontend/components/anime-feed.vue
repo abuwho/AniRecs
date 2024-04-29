@@ -27,7 +27,7 @@ onMounted(async () => {
 <style scoped>
 
 .anime-grid {
-    padding: 0 4vw;
+    padding: 20px 4vw;
 }
 
 </style>
