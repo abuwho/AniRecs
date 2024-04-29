@@ -39,5 +39,5 @@ The backend can be run using docker-compose. And the frontend is deployed on [Ve
 
 - David [@Ejedavy](https://github.com/Ejedavy) Eje 
 - Abu [@abuwho](https://github.com/abuwho) Huraira
-- Chibuoyim [@bruteforceboy](https://github.com/Ejedavy) Ogbonna
+- Chibuoyim [@bruteforceboy](https://github.com/bruteforceboy) Ogbonna
 - Wesam [@Wesam-Naseer](https://github.com/Wesam-Naseer) Naseer
