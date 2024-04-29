@@ -15,34 +15,6 @@ jobs:
       with:
         python-version: '3.x'  
         
-    - name: Load environment variables from secrets
-      env:
-        DATABASE_HOSTNAME: ${{ secrets.DATABASE_HOSTNAME }}
-        DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
-        DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
-        DATABASE_NAME: ${{ secrets.DATABASE_NAME }}
-        DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        ALGORITHM: ${{ secrets.ALGORITHM }}
-        ACCESS_TOKEN_EXPIRE_MINUTES: ${{ secrets.ACCESS_TOKEN_EXPIRE_MINUTES }}
-        REFRESH_TOKEN_EXPIRE_DAYS: ${{ secrets.REFRESH_TOKEN_EXPIRE_DAYS }}
-      run: |
-        echo "DATABASE_HOSTNAME=${DATABASE_HOSTNAME}" > backend/.env
-        echo "DATABASE_PORT=${DATABASE_PORT}" >> backend/.env
-        echo "DATABASE_PASSWORD=${DATABASE_PASSWORD}" >> backend/.env
-        echo "DATABASE_NAME=${DATABASE_NAME}" >> backend/.env
-        echo "DATABASE_USERNAME=${DATABASE_USERNAME}" >> backend/.env
-        echo "SECRET_KEY=${SECRET_KEY}" >> backend/.env
-        echo "ALGORITHM=${ALGORITHM}" >> backend/.env
-        echo "ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}" >> backend/.env
-        echo "REFRESH_TOKEN_EXPIRE_DAYS=${REFRESH_TOKEN_EXPIRE_DAYS}" >> backend/.env
-
-    - name: Check .env file and current directory
-      run: |
-        pwd
-        cat .env
-      working-directory: ./backend
-
     - name: Install Poetry
       run: |
         pip install poetry
@@ -66,11 +38,13 @@ jobs:
     - name: Set up PostgreSQL Docker container
       run: |
         docker run --name test-postgres -e POSTGRES_DB=testdb -e POSTGRES_USER=user -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
+      working-directory: ./backend
 
     - name: Set environment variables
       run: |
         export TESTING=true
         export TEST_DATABASE_URL="postgresql://user:password@localhost:5432/testdb"
+      working-directory: ./backend
 
     - name: Run pytest
       run: |
