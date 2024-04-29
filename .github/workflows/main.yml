@@ -37,6 +37,12 @@ jobs:
         echo "ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}" >> backend/.env
         echo "REFRESH_TOKEN_EXPIRE_DAYS=${REFRESH_TOKEN_EXPIRE_DAYS}" >> backend/.env
 
+    - name: Check .env file and current directory
+      run: |
+        pwd
+        cat .env
+      working-directory: ./backend
+
     - name: Install Poetry
       run: |
         pip install poetry
