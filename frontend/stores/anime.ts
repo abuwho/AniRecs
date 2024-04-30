@@ -33,7 +33,7 @@ export const useAnimeStore = defineStore('anime', {
             }
         },
 
-        async createAnime(title: string, description: string, rating: number) {
+        async createAnime(title: string, description: string, rating: number, genre: string) {
             const url = `${useRuntimeConfig().public.apiBase}/animes`
             const jwt = localStorage.getItem('anirecs:access_token');
 
@@ -45,9 +45,12 @@ export const useAnimeStore = defineStore('anime', {
                         'Authorization': `Bearer ${jwt}`
                     },
                     body: JSON.stringify({
-                        title,
-                        description, 
-                        rating
+                        anime: {
+                            title,
+                            description, 
+                            rating
+                        },
+                        genres: [genre]
                     })
                 });
 
